@@ -7,7 +7,7 @@ WebCrest is a premier digital agency dedicated to delivering high-performance, m
 - **Modern & Responsive Design**: A stunning, premium user interface built with vanilla HTML, CSS, and JavaScript.
 - **High-Performance Architecture**: Optimized for speed and smooth transitions.
 - **Interactive Elements**: Custom animations, orbit visualizers, and glassmorphism effects.
-- **Comprehensive Service Suite**: Covering Web Development, Web App Development, UX/UI Design, and Project Management.
+- **Comprehensive Service Suite**: Covering Web Development, Web App Development, UX/UI Design, and Creative Technology Mentorship.
 - **Dynamic Portfolio**: Showcasing elite digital transformations and case studies.
 
 ## 📁 Project Structure
@@ -34,6 +34,7 @@ WebCrest is a premier digital agency dedicated to delivering high-performance, m
 
 **ISAAC OFORI**
 - **LinkedIn**: [ISAAC OFORI](https://www.linkedin.com/search/results/all/?keywords=ISAAC%20OFORI)
+- **GitHub**: [ike2040](https://github.com/ike2040)
 - **WhatsApp**: [+233 59 484 4398](https://wa.me/233594844398)
 
 ## ⚖️ License

@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formSuccess = document.getElementById('formSuccess');
 
     if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
+        contactForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const submitBtn = contactForm.querySelector('button[type="submit"]');
@@ -137,27 +137,51 @@ document.addEventListener('DOMContentLoaded', function () {
             const btnIcon = submitBtn.querySelector('.btn-icon');
 
             // Show loading state
-            btnText.style.display = 'none';
-            btnIcon.style.display = 'none';
-            btnLoading.style.display = 'inline-flex';
+            if (btnText) btnText.style.display = 'none';
+            if (btnIcon) btnIcon.style.display = 'none';
+            if (btnLoading) btnLoading.style.display = 'inline-flex';
             submitBtn.disabled = true;
 
-            // Simulate form submission
-            setTimeout(() => {
-                contactForm.style.display = 'none';
-                formSuccess.style.display = 'block';
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
 
-                // Reset form after delay
-                setTimeout(() => {
-                    contactForm.reset();
-                    contactForm.style.display = 'block';
-                    formSuccess.style.display = 'none';
-                    btnText.style.display = 'inline';
-                    btnIcon.style.display = 'inline-block';
-                    btnLoading.style.display = 'none';
-                    submitBtn.disabled = false;
-                }, 3000);
-            }, 1500);
+            try {
+                const response = await fetch('https://formspree.io/f/xojkbbpn', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    contactForm.style.display = 'none';
+                    formSuccess.style.display = 'block';
+
+                    // Reset form after delay
+                    setTimeout(() => {
+                        contactForm.reset();
+                        contactForm.style.display = 'block';
+                        formSuccess.style.display = 'none';
+                        if (btnText) btnText.style.display = 'inline';
+                        if (btnIcon) btnIcon.style.display = 'inline-block';
+                        if (btnLoading) btnLoading.style.display = 'none';
+                        submitBtn.disabled = false;
+                    }, 5000);
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.errors ? errorData.errors.map(err => err.message).join(', ') : "Form submission failed.");
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Formspree Submission Error:', error);
+                alert("Oops! There was a problem submitting your form. Please try again later.");
+                if (btnText) btnText.style.display = 'inline';
+                if (btnIcon) btnIcon.style.display = 'inline-block';
+                if (btnLoading) btnLoading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
         });
     }
 
@@ -168,20 +192,47 @@ document.addEventListener('DOMContentLoaded', function () {
     const subscribeSuccess = document.getElementById('subscribeSuccess');
 
     if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function (e) {
+        newsletterForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const input = newsletterForm.querySelector('input');
+            const submitBtn = newsletterForm.querySelector('button[type="submit"]');
 
             if (input.value) {
-                newsletterForm.style.display = 'none';
-                subscribeSuccess.style.display = 'block';
+                submitBtn.disabled = true;
+                const formData = new FormData(newsletterForm);
+                const data = Object.fromEntries(formData.entries());
 
-                setTimeout(() => {
-                    input.value = '';
-                    newsletterForm.style.display = 'flex';
-                    subscribeSuccess.style.display = 'none';
-                }, 3000);
+                try {
+                    const response = await fetch('https://formspree.io/f/xojkbbpn', {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        newsletterForm.style.display = 'none';
+                        subscribeSuccess.style.display = 'block';
+
+                        setTimeout(() => {
+                            input.value = '';
+                            newsletterForm.style.display = 'flex';
+                            subscribeSuccess.style.display = 'none';
+                            submitBtn.disabled = false;
+                        }, 5000);
+                    } else {
+                        const errorData = await response.json();
+                        alert(errorData.errors ? errorData.errors.map(err => err.message).join(', ') : "Subscription failed.");
+                        throw new Error('Newsletter submission failed');
+                    }
+                } catch (error) {
+                    console.error('Newsletter Error:', error);
+                    alert("Oops! There was a problem subscribing.");
+                    submitBtn.disabled = false;
+                }
             }
         });
     }
